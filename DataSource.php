@@ -1,13 +1,15 @@
 <?php
+
 /**
- * Copyright (C) 2019 Phppot
+ * Copyright (C) 2020 EzanaLMSAPI
  *
  * Distributed under MIT license with an exception that,
  * you don’t have to include the full MIT License in your code.
  * In essense, you can use it on commercial software, modify and distribute free.
  * Though not mandatory, you are requested to attribute this URL in your code or website.
  */
-namespace Phppot;
+
+namespace EzanaLmsAPI;
 
 /**
  * Generic datasource class for handling DB operations.
@@ -15,6 +17,7 @@ namespace Phppot;
  *
  * @version 2.5 - recordCount function added
  */
+
 class DataSource
 {
 
@@ -75,7 +78,7 @@ class DataSource
     {
         $stmt = $this->conn->prepare($query);
 
-        if (! empty($paramType) && ! empty($paramArray)) {
+        if (!empty($paramType) && !empty($paramArray)) {
 
             $this->bindQueryParams($stmt, $paramType, $paramArray);
         }
@@ -88,7 +91,7 @@ class DataSource
             }
         }
 
-        if (! empty($resultset)) {
+        if (!empty($resultset)) {
             return $resultset;
         }
     }
@@ -122,7 +125,7 @@ class DataSource
     {
         $stmt = $this->conn->prepare($query);
 
-        if (! empty($paramType) && ! empty($paramArray)) {
+        if (!empty($paramType) && !empty($paramArray)) {
             $this->bindQueryParams($stmt, $paramType, $paramArray);
         }
         $stmt->execute();
@@ -139,9 +142,9 @@ class DataSource
      */
     public function bindQueryParams($stmt, $paramType, $paramArray = array())
     {
-        $paramValueReference[] = & $paramType;
-        for ($i = 0; $i < count($paramArray); $i ++) {
-            $paramValueReference[] = & $paramArray[$i];
+        $paramValueReference[] = &$paramType;
+        for ($i = 0; $i < count($paramArray); $i++) {
+            $paramValueReference[] = &$paramArray[$i];
         }
         call_user_func_array(array(
             $stmt,
@@ -160,7 +163,7 @@ class DataSource
     public function getRecordCount($query, $paramType = "", $paramArray = array())
     {
         $stmt = $this->conn->prepare($query);
-        if (! empty($paramType) && ! empty($paramArray)) {
+        if (!empty($paramType) && !empty($paramArray)) {
 
             $this->bindQueryParams($stmt, $paramType, $paramArray);
         }
