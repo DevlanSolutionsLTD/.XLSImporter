@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2020 EzanaLMSAPI
+ * Copyright (C) 2020 DevlanInc
  *
  * Distributed under MIT license with an exception that,
  * you don’t have to include the full MIT License in your code.
@@ -9,7 +9,7 @@
  * Though not mandatory, you are requested to attribute this URL in your code or website.
  */
 
-namespace EzanaLmsAPI;
+namespace DevlanInc;
 
 /**
  * Generic datasource class for handling DB operations.
@@ -29,7 +29,7 @@ class DataSource
 
     const PASSWORD = '';
 
-    const DATABASENAME = 'ezana_lms';
+    const DATABASENAME = 'xls-importer';
 
     private $conn;
 

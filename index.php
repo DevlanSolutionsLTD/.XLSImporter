@@ -1,5 +1,6 @@
 <?php
-use EzanaLmsAPI\DataSource;
+
+use DevlanInc\DataSource;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 require_once('DataSource.php');
@@ -19,7 +20,7 @@ if (isset($_POST["upload"])) {
 
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
 
-        $targetPath = 'dist/StudentsUploads/' . $_FILES['file']['name'];
+        $targetPath = 'uploads/' . $_FILES['file']['name'];
         move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
 
         $Reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -31,89 +32,46 @@ if (isset($_POST["upload"])) {
 
         for ($i = 0; $i <= $sheetCount; $i++) {
 
-            $id = "";
-            if (isset($spreadSheetAry[$i][0])) {
-                $id = mysqli_real_escape_string($conn, $spreadSheetAry[$i][0]);
-            }
-
-            $admno = "";
+            $book_title = "";
             if (isset($spreadSheetAry[$i][1])) {
-                $admno = mysqli_real_escape_string($conn, $spreadSheetAry[$i][1]);
+                $book_title = mysqli_real_escape_string($conn, $spreadSheetAry[$i][1]);
             }
-            $name = "";
+            $book_isbn = "";
             if (isset($spreadSheetAry[$i][2])) {
-                $name = mysqli_real_escape_string($conn, $spreadSheetAry[$i][2]);
+                $book_isbn = mysqli_real_escape_string($conn, $spreadSheetAry[$i][2]);
             }
 
-            $email = "";
+            $book_author = "";
             if (isset($spreadSheetAry[$i][3])) {
-                $email = mysqli_real_escape_string($conn, $spreadSheetAry[$i][3]);
+                $book_author = mysqli_real_escape_string($conn, $spreadSheetAry[$i][3]);
             }
 
-            $password = "";
+            $book_publisher = "";
             if (isset($spreadSheetAry[$i][4])) {
-                $password = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
+                $book_publisher = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
             }
 
-            $phone = "";
+            $book_year_published = "";
             if (isset($spreadSheetAry[$i][5])) {
-                $phone = mysqli_real_escape_string($conn, $spreadSheetAry[$i][5]);
+                $book_year_published = mysqli_real_escape_string($conn, $spreadSheetAry[$i][5]);
             }
 
-            $adr = "";
-            if (isset($spreadSheetAry[$i][6])) {
-                $adr = mysqli_real_escape_string($conn, $spreadSheetAry[$i][6]);
-            }
 
-            $dob = "";
-            if (isset($spreadSheetAry[$i][7])) {
-                $dob = mysqli_real_escape_string($conn, $spreadSheetAry[$i][7]);
-            }
-
-            $idno = "";
-            if (isset($spreadSheetAry[$i][8])) {
-                $idno = mysqli_real_escape_string($conn, $spreadSheetAry[$i][8]);
-            }
-
-            $gender = "";
-            if (isset($spreadSheetAry[$i][9])) {
-                $gender = mysqli_real_escape_string($conn, $spreadSheetAry[$i][9]);
-            }
-
-            $acc_status = "";
-            if (isset($spreadSheetAry[$i][10])) {
-                $acc_status = mysqli_real_escape_string($conn, $spreadSheetAry[$i][10]);
-            }
-
-            $created_at = "";
-            if (isset($spreadSheetAry[$i][11])) {
-                $created_at = mysqli_real_escape_string($conn, $spreadSheetAry[$i][11]);
-            }
-
-            if (!empty($name) || !empty($admno) || !empty($idno) || !empty($gender) || !empty($email)) {
-                $query = "INSERT INTO ezanaLMS_Students (id, admno, name, email, password, phone, adr, dob, idno, gender, acc_status, created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+            if (!empty($book_title) || !empty($book_author) || !empty($book_isbn) || !empty($book_year_published) || !empty($book_publisher)) {
+                $query = "INSERT INTO xls-importer (book_title, book_author, book_isbn, book_publisher, book_year_published) VALUES(?,?,?,?,?)";
                 $paramType = "ssssssssssss";
                 $paramArray = array(
-                    $id,
-                    $admno,
-                    $name,
-                    $email,
-                    $password,
-                    $phone,
-                    $adr,
-                    $dob,
-                    $idno,
-                    $gender,
-                    $acc_status,
-                    $created_at
+                    $book_title,
+                    $book_author,
+                    $book_isbn,
+                    $book_publisher,
+                    $book_year_published
                 );
                 $insertId = $db->insert($query, $paramType, $paramArray);
-                // $query = "insert into tbl_info(name,description) values('" . $name . "','" . $description . "')";
-                // $result = mysqli_query($conn, $query);
                 if (!empty($insertId)) {
                     $success = "Excel Data Imported into the Database";
                 } else {
-                    $success = "Excel Data Imported into the Database";
+                    $success = "Errors Encountered When Importing Data";
                 }
             }
         }
@@ -123,64 +81,122 @@ if (isset($_POST["upload"])) {
 }
 
 ?>
+<!doctype html>
+<html lang="en">
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-    <div class="wrapper">
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Import Students Details From .xls (Spreadsheet) File</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="manage_students.php">Students</a></li>
-                                <li class="breadcrumb-item active">Import</li>
-                            </ol>
-                        </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>.XLS Importer Librayr</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
+
+    <!-- Dashboard core CSS -->
+    <link href="Assets/dashboard.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="Assets/bootstrap.css" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">.XLS Importer Library</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main role="main" class="col-md-12 ml-sm-auto col-lg-12 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">.XLS Importer</h1>
+                </div>
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title text-danger">Import An Excel Worksheet To MariaDB Using PHP</h3>
                     </div>
-                </div><!-- /.container-fluid -->
-            </section>
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="col-md-12">
-                        <!-- general form elements -->
-                        <div class="card card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title text-danger">*Beta Module</h3>
-                            </div>
-                            <!-- form start -->
-                            <form method="post" enctype="multipart/form-data" role="form">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
-                                            <label for="exampleInputFile">Select File</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input required name="file" accept=".xls,.xlsx" type="file" class="custom-file-input" id="exampleInputFile">
-                                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                                </div>
-                                            </div>
+                    <!-- form start -->
+                    <form method="post" enctype="multipart/form-data" role="form">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="exampleInputFile">Select File</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input required name="file" accept=".xls,.xlsx" type="file" class="custom-file-input" id="exampleInputFile">
+                                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <button type="submit" name="upload" class="btn btn-primary">Upload File</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
+                        <div class="card-footer">
+                            <button type="submit" name="upload" class="btn btn-primary">Upload File</button>
+                        </div>
+                    </form>
+                    <hr>
+                    <h2>Book Details</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>ISBN</th>
+                                    <th>Author</th>
+                                    <th>Publisher</th>
+                                    <th>Year Published</th>
+                                    <th>Uploaded At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-            <!-- /.content -->
+            </main>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>
+        window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')
+    </script>
+    <script src="../assets/dist/js/bootstrap.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="Assets/dashboard.js"></script>
 </body>
 
 </html>
