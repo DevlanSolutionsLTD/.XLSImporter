@@ -174,11 +174,11 @@ if (isset($_POST["upload"])) {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1,001</td>
-                                    <td>Lorem</td>
-                                    <td>ipsum</td>
-                                    <td>dolor</td>
-                                    <td>sit</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
 
