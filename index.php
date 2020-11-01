@@ -90,12 +90,14 @@ if (isset($_POST["upload"])) {
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
-    <title>Dashboard Template · Bootstrap</title>
+    <title>.XLS Importer Librayr</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
 
-    <!-- Bootstrap core CSS -->
-    <link href="../assets/dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Dashboard core CSS -->
+    <link href="Assets/dashboard.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="Assets/bootstrap.css" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -366,8 +368,5 @@ if (isset($_POST["upload"])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="dashboard.js"></script>
 </body>
-
-</html>
-
 
 </html>
