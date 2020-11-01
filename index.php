@@ -1,5 +1,5 @@
 <?php
-use EzanaLmsAPI\DataSource;
+use DevlanInc\DataSource;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 require_once('DataSource.php');
@@ -19,7 +19,7 @@ if (isset($_POST["upload"])) {
 
     if (in_array($_FILES["file"]["type"], $allowedFileType)) {
 
-        $targetPath = 'dist/StudentsUploads/' . $_FILES['file']['name'];
+        $targetPath = 'uploads/' . $_FILES['file']['name'];
         move_uploaded_file($_FILES['file']['tmp_name'], $targetPath);
 
         $Reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -31,33 +31,28 @@ if (isset($_POST["upload"])) {
 
         for ($i = 0; $i <= $sheetCount; $i++) {
 
-            $id = "";
-            if (isset($spreadSheetAry[$i][0])) {
-                $id = mysqli_real_escape_string($conn, $spreadSheetAry[$i][0]);
-            }
-
-            $admno = "";
+            $book_title = "";
             if (isset($spreadSheetAry[$i][1])) {
-                $admno = mysqli_real_escape_string($conn, $spreadSheetAry[$i][1]);
+                $book_title = mysqli_real_escape_string($conn, $spreadSheetAry[$i][1]);
             }
-            $name = "";
+            $book_isbn = "";
             if (isset($spreadSheetAry[$i][2])) {
-                $name = mysqli_real_escape_string($conn, $spreadSheetAry[$i][2]);
+                $book_isbn = mysqli_real_escape_string($conn, $spreadSheetAry[$i][2]);
             }
 
-            $email = "";
+            $book_author = "";
             if (isset($spreadSheetAry[$i][3])) {
-                $email = mysqli_real_escape_string($conn, $spreadSheetAry[$i][3]);
+                $book_author = mysqli_real_escape_string($conn, $spreadSheetAry[$i][3]);
             }
 
-            $password = "";
+            $book_publisher = "";
             if (isset($spreadSheetAry[$i][4])) {
-                $password = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
+                $book_publisherbook_year_published = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
             }
 
-            $phone = "";
+            $book_year_published = "";
             if (isset($spreadSheetAry[$i][5])) {
-                $phone = mysqli_real_escape_string($conn, $spreadSheetAry[$i][5]);
+                $book_year_published = mysqli_real_escape_string($conn, $spreadSheetAry[$i][5]);
             }
 
             $adr = "";
@@ -65,30 +60,7 @@ if (isset($_POST["upload"])) {
                 $adr = mysqli_real_escape_string($conn, $spreadSheetAry[$i][6]);
             }
 
-            $dob = "";
-            if (isset($spreadSheetAry[$i][7])) {
-                $dob = mysqli_real_escape_string($conn, $spreadSheetAry[$i][7]);
-            }
-
-            $idno = "";
-            if (isset($spreadSheetAry[$i][8])) {
-                $idno = mysqli_real_escape_string($conn, $spreadSheetAry[$i][8]);
-            }
-
-            $gender = "";
-            if (isset($spreadSheetAry[$i][9])) {
-                $gender = mysqli_real_escape_string($conn, $spreadSheetAry[$i][9]);
-            }
-
-            $acc_status = "";
-            if (isset($spreadSheetAry[$i][10])) {
-                $acc_status = mysqli_real_escape_string($conn, $spreadSheetAry[$i][10]);
-            }
-
-            $created_at = "";
-            if (isset($spreadSheetAry[$i][11])) {
-                $created_at = mysqli_real_escape_string($conn, $spreadSheetAry[$i][11]);
-            }
+            
 
             if (!empty($name) || !empty($admno) || !empty($idno) || !empty($gender) || !empty($email)) {
                 $query = "INSERT INTO ezanaLMS_Students (id, admno, name, email, password, phone, adr, dob, idno, gender, acc_status, created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
