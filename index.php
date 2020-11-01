@@ -47,45 +47,30 @@ if (isset($_POST["upload"])) {
 
             $book_publisher = "";
             if (isset($spreadSheetAry[$i][4])) {
-                $book_publisherbook_year_published = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
+                $book_publisher = mysqli_real_escape_string($conn, $spreadSheetAry[$i][4]);
             }
 
             $book_year_published = "";
             if (isset($spreadSheetAry[$i][5])) {
                 $book_year_published = mysqli_real_escape_string($conn, $spreadSheetAry[$i][5]);
             }
-
-            $adr = "";
-            if (isset($spreadSheetAry[$i][6])) {
-                $adr = mysqli_real_escape_string($conn, $spreadSheetAry[$i][6]);
-            }
-
             
 
-            if (!empty($name) || !empty($admno) || !empty($idno) || !empty($gender) || !empty($email)) {
-                $query = "INSERT INTO ezanaLMS_Students (id, admno, name, email, password, phone, adr, dob, idno, gender, acc_status, created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+            if (!empty($book_title) || !empty($book_author) || !empty($book_isbn) || !empty($book_year_published) || !empty($book_publisher)) {
+                $query = "INSERT INTO xls-importer (book_title, book_author, book_isbn, book_publisher, book_year_published) VALUES(?,?,?,?,?)";
                 $paramType = "ssssssssssss";
                 $paramArray = array(
-                    $id,
-                    $admno,
-                    $name,
-                    $email,
-                    $password,
-                    $phone,
-                    $adr,
-                    $dob,
-                    $idno,
-                    $gender,
-                    $acc_status,
-                    $created_at
+                    $book_title,
+                    $book_author,
+                    $book_isbn,
+                    $book_publisher,
+                    $book_year_published
                 );
                 $insertId = $db->insert($query, $paramType, $paramArray);
-                // $query = "insert into tbl_info(name,description) values('" . $name . "','" . $description . "')";
-                // $result = mysqli_query($conn, $query);
                 if (!empty($insertId)) {
                     $success = "Excel Data Imported into the Database";
                 } else {
-                    $success = "Excel Data Imported into the Database";
+                    $success = "Errors Encountered When Importing Data";
                 }
             }
         }
