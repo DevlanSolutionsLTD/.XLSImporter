@@ -58,7 +58,7 @@ if (isset($_POST["upload"])) {
 
             if (!empty($book_title) || !empty($book_author) || !empty($book_isbn) || !empty($book_year_published) || !empty($book_publisher)) {
                 $query = "INSERT INTO xls_importer_demo (book_title, book_author, book_isbn, book_publisher, book_year_published) VALUES(?,?,?,?,?)";
-                $paramType = "ssssssssssss";
+                $paramType = "sssss";
                 $paramArray = array(
                     $book_title,
                     $book_author,
@@ -167,7 +167,6 @@ if (isset($_POST["upload"])) {
                                 <table class="table table-striped table-sm">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>Title</th>
                                             <th>ISBN</th>
                                             <th>Author</th>
