@@ -8,7 +8,6 @@ $db = new DataSource();
 $conn = $db->getConnection();
 require_once('vendor/autoload.php');
 
-
 if (isset($_POST["upload"])) {
 
     $allowedFileType = [
@@ -58,8 +57,8 @@ if (isset($_POST["upload"])) {
 
 
             if (!empty($book_title) || !empty($book_author) || !empty($book_isbn) || !empty($book_year_published) || !empty($book_publisher)) {
-                $query = "INSERT INTO xls-importer (book_title, book_author, book_isbn, book_publisher, book_year_published) VALUES(?,?,?,?,?)";
-                $paramType = "ssssssssssss";
+                $query = "INSERT INTO xls_importer_demo (book_title, book_author, book_isbn, book_publisher, book_year_published) VALUES(?,?,?,?,?)";
+                $paramType = "sssss";
                 $paramArray = array(
                     $book_title,
                     $book_author,
@@ -160,30 +159,43 @@ if (isset($_POST["upload"])) {
                     <hr>
                     <h2>Book Details</h2>
                     <div class="table-responsive">
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th>ISBN</th>
-                                    <th>Author</th>
-                                    <th>Publisher</th>
-                                    <th>Year Published</th>
-                                    <th>Uploaded At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                            </tbody>
-                        </table>
+                        <?php
+                        $sqlSelect = "SELECT * FROM xls_importer_demo";
+                        $result = $db->select($sqlSelect);
+                        if (!empty($result)) { {
+                        ?>
+                                <table class="table table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>ISBN</th>
+                                            <th>Author</th>
+                                            <th>Publisher</th>
+                                            <th>Year Published</th>
+                                            <th>Uploaded At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        foreach ($result as $row) {
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $row['book_title']; ?></td>
+                                                <td><?php echo $row['book_isbn']; ?></td>
+                                                <td><?php echo $row['book_author']; ?></td>
+                                                <td><?php echo $row['book_publisher']; ?></td>
+                                                <td><?php echo $row['book_year_published']; ?></td>
+                                                <td><?php echo $row['created_at']; ?></td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                        <?php
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
             </main>
